@@ -1,0 +1,263 @@
+--------------
+/* John Hattori */
+
+    /* enable warnings! */
+
+use   a_testbed
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+/*  TASK 00 */ 
+select user(), current_date(), version(), @@sql_mode
+--------------
+
+*************************** 1. row ***************************
+        user(): jtori@localhost
+current_date(): 2014-08-24
+     version(): 5.6.20
+    @@sql_mode: STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION
+1 row in set (0.00 sec)
+
+--------------
+/*  TASK 01 */
+
+Delete
+From a_testbed.zoo_2014
+Where z_id > 100
+--------------
+
+Query OK, 9 rows affected (0.00 sec)
+
+--------------
+Select *
+From a_testbed.zoo_2014
+--------------
+
++------+---------+-----------+---------+---------------------+------------+
+| z_id | z_name  | z_type    | z_cost  | z_dob               | z_acquired |
++------+---------+-----------+---------+---------------------+------------+
+|   23 | Sam     | Giraffe   | 5000.00 | 2002-05-15 10:45:00 | 2002-05-15 |
+|   25 | Abigail | Armadillo |  490.00 | 2010-01-15 08:30:00 | 2010-04-15 |
+|   56 | Leon    | Lion      | 5000.00 | 2009-02-25 15:00:00 | 2010-03-25 |
+|   57 | Lenora  | Lion      | 5000.00 | 2009-03-25 15:35:00 | 2011-01-15 |
+|   85 | Sally   | Giraffe   | 5000.25 | 2009-05-15 02:02:00 | 2012-05-15 |
+|   43 | Huey    | Zebra     | 2500.25 | 2012-06-02 02:02:00 | 2012-06-02 |
+|   44 | Dewey   | Zebra     | 2500.25 | 2012-06-02 02:10:00 | 2012-06-02 |
+|   45 | Louie   | Zebra     | 2500.25 | 2013-01-02 02:25:00 | 2013-01-02 |
+|   47 | NULL    | Horse     |  490.00 | 2010-05-15 08:30:00 | 2010-04-15 |
+|   52 | Dewey   | Giraffe   | 3750.00 | 2013-06-06 02:10:00 | 2013-07-12 |
++------+---------+-----------+---------+---------------------+------------+
+10 rows in set (0.00 sec)
+
+--------------
+/*  TASK 02 */
+
+Insert 
+Into zoo_2014 
+    (z_id, z_name, z_type, z_cost, z_dob, z_acquired)
+Values 
+    (124, 'Zuca', 'Jaguar', 8000.00, '2012-07-24 02:40:00', '2014-07-18')
+   ,(164, 'Mona', 'Wooly Lemur', 2000.00, '2008-02-28 10:20:00', '2012-08-04')
+   ,(240, 'Lucky', 'Giant Sloth', 4000.00, '2002-12-24 12:00:00', '2006-06-07')
+--------------
+
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+--------------
+/*  TASK 03 */
+
+Insert 
+Into a_testbed.zoo_2014 
+    (z_id, z_name, z_type, z_cost, z_dob, z_acquired) 
+Values
+    (127, 'Vence', 'Ox', 800.00,'2013-08-18 15:47','2014-04-15')
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+Insert 
+Into a_testbed.zoo_2014 
+    (z_id, z_name, z_type, z_cost, z_dob, z_acquired) 
+Values
+    (138, 'Vences', 'Lion',600.50,'2011-01-15 17:30','2014-05-15')
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+Insert 
+Into a_testbed.zoo_2014 
+    (z_id, z_name, z_type, z_cost, z_dob, z_acquired) 
+Values 
+    (160, 'Venceslas', 'Eagle', 800.00,'2011-03-25 19:00','2013-04-20')
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+Insert 
+Into a_testbed.zoo_2014 
+Values
+    ( 144, 'Fred', 'Alpaca', 1200.00, '2011-05-01 15:40:00', '2012-03-20' )
+    ,( 242, 'Alistair', 'Serval', 400.00, '2009-08-10 06:00:00', '2010-05-20' )
+    ,( 301, 'Sphinx', 'Tiger', 7500.00, '2005-10-10 11:11:11', '2013-01-01' )
+--------------
+
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+--------------
+/*  TASK 04 */
+
+Select z_name, z_type, z_id, z_cost, z_dob, z_acquired
+From a_testbed.zoo_2014
+--------------
+
++-----------+-------------+------+---------+---------------------+------------+
+| z_name    | z_type      | z_id | z_cost  | z_dob               | z_acquired |
++-----------+-------------+------+---------+---------------------+------------+
+| Sam       | Giraffe     |   23 | 5000.00 | 2002-05-15 10:45:00 | 2002-05-15 |
+| Abigail   | Armadillo   |   25 |  490.00 | 2010-01-15 08:30:00 | 2010-04-15 |
+| Leon      | Lion        |   56 | 5000.00 | 2009-02-25 15:00:00 | 2010-03-25 |
+| Lenora    | Lion        |   57 | 5000.00 | 2009-03-25 15:35:00 | 2011-01-15 |
+| Sally     | Giraffe     |   85 | 5000.25 | 2009-05-15 02:02:00 | 2012-05-15 |
+| Huey      | Zebra       |   43 | 2500.25 | 2012-06-02 02:02:00 | 2012-06-02 |
+| Dewey     | Zebra       |   44 | 2500.25 | 2012-06-02 02:10:00 | 2012-06-02 |
+| Louie     | Zebra       |   45 | 2500.25 | 2013-01-02 02:25:00 | 2013-01-02 |
+| NULL      | Horse       |   47 |  490.00 | 2010-05-15 08:30:00 | 2010-04-15 |
+| Dewey     | Giraffe     |   52 | 3750.00 | 2013-06-06 02:10:00 | 2013-07-12 |
+| Zuca      | Jaguar      |  124 | 8000.00 | 2012-07-24 02:40:00 | 2014-07-18 |
+| Mona      | Wooly Lemur |  164 | 2000.00 | 2008-02-28 10:20:00 | 2012-08-04 |
+| Lucky     | Giant Sloth |  240 | 4000.00 | 2002-12-24 12:00:00 | 2006-06-07 |
+| Vence     | Ox          |  127 |  800.00 | 2013-08-18 15:47:00 | 2014-04-15 |
+| Vences    | Lion        |  138 |  600.50 | 2011-01-15 17:30:00 | 2014-05-15 |
+| Venceslas | Eagle       |  160 |  800.00 | 2011-03-25 19:00:00 | 2013-04-20 |
+| Fred      | Alpaca      |  144 | 1200.00 | 2011-05-01 15:40:00 | 2012-03-20 |
+| Alistair  | Serval      |  242 |  400.00 | 2009-08-10 06:00:00 | 2010-05-20 |
+| Sphinx    | Tiger       |  301 | 7500.00 | 2005-10-10 11:11:11 | 2013-01-01 |
++-----------+-------------+------+---------+---------------------+------------+
+19 rows in set (0.00 sec)
+
+--------------
+/*  TASK 05 */
+
+Select z_type, z_name, z_cost
+From a_testbed.zoo_2014
+--------------
+
++-------------+-----------+---------+
+| z_type      | z_name    | z_cost  |
++-------------+-----------+---------+
+| Giraffe     | Sam       | 5000.00 |
+| Armadillo   | Abigail   |  490.00 |
+| Lion        | Leon      | 5000.00 |
+| Lion        | Lenora    | 5000.00 |
+| Giraffe     | Sally     | 5000.25 |
+| Zebra       | Huey      | 2500.25 |
+| Zebra       | Dewey     | 2500.25 |
+| Zebra       | Louie     | 2500.25 |
+| Horse       | NULL      |  490.00 |
+| Giraffe     | Dewey     | 3750.00 |
+| Jaguar      | Zuca      | 8000.00 |
+| Wooly Lemur | Mona      | 2000.00 |
+| Giant Sloth | Lucky     | 4000.00 |
+| Ox          | Vence     |  800.00 |
+| Lion        | Vences    |  600.50 |
+| Eagle       | Venceslas |  800.00 |
+| Alpaca      | Fred      | 1200.00 |
+| Serval      | Alistair  |  400.00 |
+| Tiger       | Sphinx    | 7500.00 |
++-------------+-----------+---------+
+19 rows in set (0.00 sec)
+
+--------------
+/*  TASK 06 */
+
+Select z_type, z_name
+From a_testbed.zoo_2014
+--------------
+
++-------------+-----------+
+| z_type      | z_name    |
++-------------+-----------+
+| Giraffe     | Sam       |
+| Armadillo   | Abigail   |
+| Lion        | Leon      |
+| Lion        | Lenora    |
+| Giraffe     | Sally     |
+| Zebra       | Huey      |
+| Zebra       | Dewey     |
+| Zebra       | Louie     |
+| Horse       | NULL      |
+| Giraffe     | Dewey     |
+| Jaguar      | Zuca      |
+| Wooly Lemur | Mona      |
+| Giant Sloth | Lucky     |
+| Ox          | Vence     |
+| Lion        | Vences    |
+| Eagle       | Venceslas |
+| Alpaca      | Fred      |
+| Serval      | Alistair  |
+| Tiger       | Sphinx    |
++-------------+-----------+
+19 rows in set (0.00 sec)
+
+--------------
+/*  TASK 07 */
+
+Select z_id, z_name, z_dob
+From a_testbed.zoo_2014
+Where z_type = "Zebra"
+--------------
+
++------+--------+---------------------+
+| z_id | z_name | z_dob               |
++------+--------+---------------------+
+|   43 | Huey   | 2012-06-02 02:02:00 |
+|   44 | Dewey  | 2012-06-02 02:10:00 |
+|   45 | Louie  | 2013-01-02 02:25:00 |
++------+--------+---------------------+
+3 rows in set (0.00 sec)
+
+--------------
+/*  TASK 08 */
+
+show tables
+--------------
+
++---------------------+
+| Tables_in_a_testbed |
++---------------------+
+| zoo_2014            |
++---------------------+
+1 row in set (0.00 sec)
+
+--------------
+/*  TASK 09 */
+
+desc zoo_2014
+--------------
+
++------------+-----------------------+------+-----+---------+-------+
+| Field      | Type                  | Null | Key | Default | Extra |
++------------+-----------------------+------+-----+---------+-------+
+| z_id       | int(11)               | NO   |     | NULL    |       |
+| z_name     | varchar(25)           | YES  |     | NULL    |       |
+| z_type     | varchar(25)           | NO   |     | NULL    |       |
+| z_cost     | decimal(7,2) unsigned | NO   |     | NULL    |       |
+| z_dob      | datetime              | NO   |     | NULL    |       |
+| z_acquired | date                  | NO   |     | NULL    |       |
++------------+-----------------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+--------------
+/*  TASK 10 */
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+Bye
