@@ -1,0 +1,250 @@
+--------------
+/* John Hattori */
+
+    /* enable warnings! */
+
+use   a_vets
+--------------
+
+Query OK, 0 rows affected (0.01 sec)
+
+--------------
+/*  TASK 00 */ 
+select user(), current_date(), version(), @@sql_mode
+--------------
+
+*************************** 1. row ***************************
+        user(): jtori@localhost
+current_date(): 2014-09-16
+     version(): 5.6.20
+    @@sql_mode: STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION
+1 row in set (0.00 sec)
+
+--------------
+/*  TASK 01 */
+
+select cl.cl_id
+, ex_id
+, sv.srv_id
+, srv_desc
+, srv_list_price
+, ex_fee
+from vt_exam_details
+join vt_exam_headers using(ex_id)
+join vt_animals using(an_id)
+join vt_clients cl using(cl_id)
+join vt_services sv using(srv_id)
+where ex_fee > 100
+order by cl_id, srv_id
+--------------
+
++-------+-------+--------+--------------------------------------------+----------------+--------+
+| cl_id | ex_id | srv_id | srv_desc                                   | srv_list_price | ex_fee |
++-------+-------+--------+--------------------------------------------+----------------+--------+
+|  1825 |  3612 |    602 | General Anethesia 1 hour                   |         222.00 | 222.00 |
+|  1825 |  3612 |    604 | Dental Scaling                             |         109.00 | 109.00 |
+|  1825 |  3612 |    625 | CBC and scan                               |         155.00 | 155.00 |
+|  1825 |  4103 |   4601 | Feline Behaviour Modification Consultation |         275.00 | 275.00 |
+|  1825 |  3486 |   4601 | Feline Behaviour Modification Consultation |         275.00 | 275.00 |
+|  5699 |  3105 |    110 | Dental Cleaning-Other                      |         100.00 | 150.00 |
++-------+-------+--------+--------------------------------------------+----------------+--------+
+6 rows in set (0.05 sec)
+
+--------------
+/*  TASK 02 */
+
+select ex_id
+, ex_date
+, srv_id
+, ex_fee
+from vt_exam_headers
+join vt_exam_details using(ex_id)
+join vt_animals using(an_id)
+where an_type in('hamster', 'porcupine', 'dormouse')
+order by ex_id
+--------------
+
++-------+---------------------+--------+--------+
+| ex_id | ex_date             | srv_id | ex_fee |
++-------+---------------------+--------+--------+
+|  3105 | 2013-08-10 09:15:00 |    523 |  50.50 |
+|  3105 | 2013-08-10 09:15:00 |    110 | 150.00 |
+|  3203 | 2013-10-03 14:30:00 |    524 |  20.00 |
+|  3321 | 2014-02-17 10:45:00 |    748 |   0.00 |
+|  3322 | 2014-02-10 09:15:00 |    748 |  29.50 |
+|  3323 | 2014-02-25 14:30:00 |    524 |  20.00 |
+|  3393 | 2013-12-23 12:15:00 |    748 |  29.50 |
+|  3486 | 2013-12-31 13:00:00 |   4601 | 275.00 |
+|  4103 | 2014-01-08 15:30:00 |   4601 | 275.00 |
++-------+---------------------+--------+--------+
+9 rows in set (0.00 sec)
+
+--------------
+/*  TASK 03 */
+
+select distinct stf_id
+, stf_name_first
+, stf_name_last
+, ex_date
+from vt_staff
+join vt_exam_headers using(stf_id)
+where ex_date < '2014-01-01'
+--------------
+
++--------+----------------+---------------+---------------------+
+| stf_id | stf_name_first | stf_name_last | ex_date             |
++--------+----------------+---------------+---------------------+
+|     15 | Eliza          | Dolittle      | 2013-11-23 10:30:00 |
+|     15 | Eliza          | Dolittle      | 2013-11-06 10:30:00 |
+|     15 | Eliza          | Dolittle      | 2013-12-22 09:00:00 |
+|     15 | Eliza          | Dolittle      | 2013-12-26 09:30:00 |
+|     15 | Eliza          | Dolittle      | 2013-12-31 13:00:00 |
+|     29 | Sandy          | Helfen        | 2013-08-24 10:45:00 |
+|     29 | Sandy          | Helfen        | 2013-08-22 10:45:00 |
+|     29 | Sandy          | Helfen        | 2013-08-10 09:15:00 |
+|     29 | Sandy          | Helfen        | 2013-10-03 14:30:00 |
+|     29 | Sandy          | Helfen        | 2013-12-06 10:45:00 |
+|     29 | Sandy          | Helfen        | 2013-12-23 12:15:00 |
+|     29 | Sandy          | Helfen        | 2013-12-27 10:45:00 |
++--------+----------------+---------------+---------------------+
+12 rows in set (0.00 sec)
+
+--------------
+/*  TASK 04 */
+
+select cl_id
+, concat(cl_name_first, ' ', cl_name_last)
+, an_id
+, an_name
+, ex_date
+, srv_id
+, ex_fee
+from vt_clients
+join vt_animals using(cl_id)
+join vt_exam_headers using(an_id)
+join vt_exam_details using(ex_id)
+where (an_dob between '2013-01-01' and '2014-12-31')
+order by an_id, ex_date, srv_id
+--------------
+
++-------+------------------------------------------+-------+---------+---------------------+--------+--------+
+| cl_id | concat(cl_name_first, ' ', cl_name_last) | an_id | an_name | ex_date             | srv_id | ex_fee |
++-------+------------------------------------------+-------+---------+---------------------+--------+--------+
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-04-01 16:30:00 |    108 |  80.00 |
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-05-01 16:30:00 |    308 |   5.00 |
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-05-23 08:30:00 |    602 | 222.00 |
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-05-23 08:30:00 |    603 |  78.00 |
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-05-23 08:30:00 |    604 | 109.00 |
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-05-23 08:30:00 |    606 |  40.00 |
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-05-23 08:30:00 |    607 |  57.00 |
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-05-23 08:30:00 |    612 |  25.91 |
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-05-23 08:30:00 |    613 |  47.00 |
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-05-23 08:30:00 |    615 |  78.30 |
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-05-23 08:30:00 |    625 | 155.00 |
+|  1825 | Eddie Harris                             | 16003 | Ursula  | 2014-06-10 10:30:00 |    308 |   2.25 |
+|   411 | James Carter                             | 21001 | Yoggie  | 2013-11-23 10:30:00 |    110 |  50.00 |
+|   411 | James Carter                             | 21001 | Yoggie  | 2013-11-23 10:30:00 |    523 |  60.00 |
+|  1825 | Eddie Harris                             | 21005 | Koshka  | 2013-12-31 13:00:00 |   4601 | 275.00 |
++-------+------------------------------------------+-------+---------+---------------------+--------+--------+
+15 rows in set (0.01 sec)
+
+--------------
+/*  TASK 05 */
+
+select distinct cl_id
+, cl_name_last
+from vt_clients
+join vt_animals using(cl_id)
+where an_type in ('cat')
+order by cl_id
+--------------
+
++-------+--------------+
+| cl_id | cl_name_last |
++-------+--------------+
+|  1825 | Harris       |
+|  1852 | Dalrymple    |
+|  3560 | Monk         |
+|  6897 | Drake        |
++-------+--------------+
+4 rows in set (0.00 sec)
+
+--------------
+/*  TASK 06 */
+
+select distinct cl_id
+, cl_name_last
+from vt_clients
+join vt_animals using(cl_id)
+where an_type not in ('cat')
+order by cl_id
+--------------
+
++-------+--------------+
+| cl_id | cl_name_last |
++-------+--------------+
+|   411 | Carter       |
+|  1825 | Harris       |
+|  1852 | Dalrymple    |
+|  3560 | Monk         |
+|  4534 | Montgomery   |
+|  5699 | Biederbecke  |
+|  7152 | Brubeck      |
++-------+--------------+
+7 rows in set (0.00 sec)
+
+--------------
+/*  TASK 07 */
+
+select distinct cl_id
+, cl_name_last
+from vt_clients
+join vt_animals using(cl_id)
+where an_type in('hamster', 'porcupine', 'dormouse')
+order by cl_id
+--------------
+
++-------+--------------+
+| cl_id | cl_name_last |
++-------+--------------+
+|  1825 | Harris       |
+|  3560 | Monk         |
+|  5699 | Biederbecke  |
++-------+--------------+
+3 rows in set (0.00 sec)
+
+--------------
+/*  TASK 08 */
+
+select distinct cl_id
+, cl_name_last
+from vt_clients
+join vt_animals using(cl_id)
+where an_type not in('hamster', 'porcupine', 'dormouse')
+order by cl_id
+--------------
+
++-------+--------------+
+| cl_id | cl_name_last |
++-------+--------------+
+|   411 | Carter       |
+|  1825 | Harris       |
+|  1852 | Dalrymple    |
+|  3560 | Monk         |
+|  4534 | Montgomery   |
+|  5699 | Biederbecke  |
+|  6897 | Drake        |
+|  7152 | Brubeck      |
++-------+--------------+
+8 rows in set (0.00 sec)
+
+--------------
+/*  TASK 09 */
+
+
+/*  TASK 10 */
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+Bye

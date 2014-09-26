@@ -1,0 +1,367 @@
+--------------
+/* John Hattori */
+
+    /* enable warnings! */
+
+use   a_vets
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+/*  TASK 00 */ 
+select user(), current_date(), version(), @@sql_mode
+--------------
+
+*************************** 1. row ***************************
+        user(): jtori@localhost
+current_date(): 2014-09-23
+     version(): 5.6.20
+    @@sql_mode: STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION
+1 row in set (0.00 sec)
+
+--------------
+/*  TASK 01 */
+
+select stf_job_title
+, stf_name_last
+from vt_staff s
+join vt_staff_pay sp on s.stf_id = sp.stf_id
+where sp.stf_salary > 30000
+--------------
+
++---------------+---------------+
+| stf_job_title | stf_name_last |
++---------------+---------------+
+| vet           | Dolittle      |
+| clerical      | Horn          |
+| vet           | Wilkommen     |
+| vet           | Wasilewski    |
+| vet assnt     | Helfen        |
++---------------+---------------+
+5 rows in set (0.00 sec)
+
+--------------
+/* Is this also a valid way to write a join statement? */
+
+select stf_job_title
+, stf_name_last
+from vt_staff s, vt_staff_pay sp
+where s.stf_id = sp.stf_id
+and sp.stf_salary > 30000
+--------------
+
++---------------+---------------+
+| stf_job_title | stf_name_last |
++---------------+---------------+
+| vet           | Dolittle      |
+| clerical      | Horn          |
+| vet           | Wilkommen     |
+| vet           | Wasilewski    |
+| vet assnt     | Helfen        |
++---------------+---------------+
+5 rows in set (0.00 sec)
+
+--------------
+/* using Subquery */
+
+select stf_job_title
+, stf_name_last
+from vt_staff 
+where stf_id in (
+    select stf_id
+    from vt_staff_pay
+    where stf_salary > 30000)
+--------------
+
++---------------+---------------+
+| stf_job_title | stf_name_last |
++---------------+---------------+
+| vet           | Dolittle      |
+| clerical      | Horn          |
+| vet           | Wilkommen     |
+| vet           | Wasilewski    |
+| vet assnt     | Helfen        |
++---------------+---------------+
+5 rows in set (0.01 sec)
+
+--------------
+/*  TASK 02 */
+
+select cl_id
+, an_id
+, an_name
+, an_dob
+from vt_animals 
+where cl_id  in (
+    select cl_id
+    from vt_clients
+    where cl_state in ('NY', 'MA'))
+and an_type not in ('cat', 'dog', 'bird')
+--------------
+
++-------+-------+---------+------------+
+| cl_id | an_id | an_name | an_dob     |
++-------+-------+---------+------------+
+|  3560 | 12038 | Gutsy   | 2012-04-29 |
+|  7152 | 17026 | 3P#_26  | 2010-01-10 |
+|  7152 | 17027 | 3P#_25  | 2010-01-10 |
++-------+-------+---------+------------+
+3 rows in set (0.00 sec)
+
+--------------
+/*  TASK 03 */
+
+set @fee = 50
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+select srv_id
+, ex_fee
+, ed.ex_id
+, ex_date
+from vt_exam_details ed, vt_exam_headers eh
+where ed.ex_id = eh.ex_id
+and ed.ex_fee > @fee
+--------------
+
++--------+--------+-------+---------------------+
+| srv_id | ex_fee | ex_id | ex_date             |
++--------+--------+-------+---------------------+
+|    106 |  75.00 |  3104 | 2014-01-09 16:30:00 |
+|    523 |  50.50 |  3105 | 2013-08-10 09:15:00 |
+|    110 | 150.00 |  3105 | 2013-08-10 09:15:00 |
+|    523 |  60.00 |  3282 | 2013-11-23 10:30:00 |
+|    105 |  55.00 |  3390 | 2013-12-22 09:00:00 |
+|    101 |  70.00 |  3390 | 2013-12-22 09:00:00 |
+|    108 |  80.00 |  3420 | 2014-04-01 16:30:00 |
+|   4601 | 275.00 |  3486 | 2013-12-31 13:00:00 |
+|    110 |  75.00 |  3513 | 2014-06-06 10:30:00 |
+|    602 | 222.00 |  3612 | 2014-05-23 08:30:00 |
+|    603 |  78.00 |  3612 | 2014-05-23 08:30:00 |
+|    604 | 109.00 |  3612 | 2014-05-23 08:30:00 |
+|    625 | 155.00 |  3612 | 2014-05-23 08:30:00 |
+|    607 |  57.00 |  3612 | 2014-05-23 08:30:00 |
+|    615 |  78.30 |  3612 | 2014-05-23 08:30:00 |
+|    104 |  60.00 |  4101 | 2014-01-02 13:00:00 |
+|    615 |  75.00 |  4101 | 2014-01-02 13:00:00 |
+|    104 |  60.00 |  4102 | 2014-01-08 13:00:00 |
+|   4601 | 275.00 |  4103 | 2014-01-08 15:30:00 |
++--------+--------+-------+---------------------+
+19 rows in set (0.00 sec)
+
+--------------
+set @fee = 100
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+select srv_id
+, ex_fee
+, ed.ex_id
+, ex_date
+from vt_exam_details ed, vt_exam_headers eh
+where ed.ex_id = eh.ex_id
+and ed.ex_fee > @fee
+--------------
+
++--------+--------+-------+---------------------+
+| srv_id | ex_fee | ex_id | ex_date             |
++--------+--------+-------+---------------------+
+|    110 | 150.00 |  3105 | 2013-08-10 09:15:00 |
+|   4601 | 275.00 |  3486 | 2013-12-31 13:00:00 |
+|    602 | 222.00 |  3612 | 2014-05-23 08:30:00 |
+|    604 | 109.00 |  3612 | 2014-05-23 08:30:00 |
+|    625 | 155.00 |  3612 | 2014-05-23 08:30:00 |
+|   4601 | 275.00 |  4103 | 2014-01-08 15:30:00 |
++--------+--------+-------+---------------------+
+6 rows in set (0.00 sec)
+
+--------------
+/*  TASK 04 */
+
+set @animal = 15001
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+select cl.cl_id
+, cl_name_last
+, an.an_type
+, srv_id
+, ex_desc
+, ex_fee
+from vt_animals an, vt_clients cl
+, vt_exam_headers eh, vt_exam_details ed
+where cl.cl_id = an.cl_id 
+and an.an_id = eh.an_id
+and eh.ex_id = ed.ex_id
+and an.an_id = @animal
+--------------
+
++-------+--------------+-----------+--------+--------------------+--------+
+| cl_id | cl_name_last | an_type   | srv_id | ex_desc            | ex_fee |
++-------+--------------+-----------+--------+--------------------+--------+
+|  5699 | Biederbecke  | chelonian |    104 | check up           |  30.00 |
+|  5699 | Biederbecke  | chelonian |   1002 | mite infestation   |  25.00 |
+|  5699 | Biederbecke  | chelonian |    687 | shell softening    |  45.00 |
+|  5699 | Biederbecke  | chelonian |    104 | follow up check up |  30.00 |
+|  5699 | Biederbecke  | chelonian |    104 | reg exam           |  60.00 |
+|  5699 | Biederbecke  | chelonian |    615 | poss infection     |  75.00 |
++-------+--------------+-----------+--------+--------------------+--------+
+6 rows in set (0.00 sec)
+
+--------------
+/* no an_id = 16004 in vt_exam_headers table */
+
+set @animal = 16004
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+select cl.cl_id
+, cl_name_last
+, an.an_type
+, srv_id
+, ex_desc
+, ex_fee
+from vt_animals an, vt_clients cl
+, vt_exam_headers eh, vt_exam_details ed
+where cl.cl_id = an.cl_id 
+and an.an_id = eh.an_id
+and eh.ex_id = ed.ex_id
+and an.an_id = @animal
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+set @animal = 15401
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+select cl.cl_id
+, cl_name_last
+, an.an_type
+, srv_id
+, ex_desc
+, ex_fee
+from vt_animals an, vt_clients cl
+, vt_exam_headers eh, vt_exam_details ed
+where cl.cl_id = an.cl_id 
+and an.an_id = eh.an_id
+and eh.ex_id = ed.ex_id
+and an.an_id = @animal
+--------------
+
++-------+--------------+---------+--------+------------------+--------+
+| cl_id | cl_name_last | an_type | srv_id | ex_desc          | ex_fee |
++-------+--------------+---------+--------+------------------+--------+
+|   411 | Carter       | lizard  |    104 | yearly checkup   |  30.00 |
+|   411 | Carter       | lizard  |    110 | repeat treatment |  75.00 |
++-------+--------------+---------+--------+------------------+--------+
+2 rows in set (0.00 sec)
+
+--------------
+/*  TASK 05 */
+
+select ex_desc
+, srv_id
+from vt_exam_details
+where ex_desc like '%feline%'
+and ex_desc not like '%dental%'
+order by ex_desc, srv_id
+--------------
+
++-------------+--------+
+| ex_desc     | srv_id |
++-------------+--------+
+| Feline cage |    613 |
++-------------+--------+
+1 row in set (0.00 sec)
+
+--------------
+/*  TASK 06 */
+
+select cl_id
+, cl_name_last
+from vt_clients
+where cl_id in (
+    select cl_id
+    from vt_animals 
+    where an_type in ('snake', 'chelonian', 'crocodilian', 'lizard'))
+--------------
+
++-------+--------------+
+| cl_id | cl_name_last |
++-------+--------------+
+|   411 | Carter       |
+|  1852 | Dalrymple    |
+|  4534 | Montgomery   |
+|  5699 | Biederbecke  |
+|  7152 | Brubeck      |
++-------+--------------+
+5 rows in set (0.00 sec)
+
+--------------
+/*  TASK 07 */
+select cl_id
+, cl_name_last
+from vt_clients
+where cl_id in (
+    select cl_id
+    from vt_animals 
+    where an_type in ('snake', 'chelonian', 'crocodilian', 'lizard'))
+    and cl_id in (
+    select cl_id
+    from vt_animals
+    where an_type in ('bird'))
+--------------
+
++-------+--------------+
+| cl_id | cl_name_last |
++-------+--------------+
+|  4534 | Montgomery   |
++-------+--------------+
+1 row in set (0.00 sec)
+
+--------------
+/*  TASK 08 */
+
+select cl_id
+, cl_name_last
+from vt_clients
+where cl_id not in (
+    select cl_id
+    from vt_animals 
+    where an_type in ('snake', 'chelonian', 'crocodilian', 'lizard'))
+    and cl_id in (
+    select cl_id
+    from vt_animals
+    where an_type in ('bird'))
+--------------
+
++-------+--------------+
+| cl_id | cl_name_last |
++-------+--------------+
+|  3560 | Monk         |
++-------+--------------+
+1 row in set (0.00 sec)
+
+--------------
+/*  TASK 09 */
+
+
+/*  TASK 10 */
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+Bye

@@ -1,0 +1,4 @@
+
+// to create spool file, run without > part
+
+mysql -u jtori  -vvv --force --comments < ./A04_Hattori.sql > ./A04_Hattori.lst
